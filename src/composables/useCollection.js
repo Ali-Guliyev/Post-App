@@ -10,7 +10,7 @@ const useCollection = (collection) => {
     isPending.value = true;
 
     try {
-      const res = "";
+      let res = "";
       if (id) {
         res = await projectFirestore
           .collection(collection)

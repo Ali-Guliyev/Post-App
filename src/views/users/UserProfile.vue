@@ -25,8 +25,8 @@
         >Edit Profile</router-link
       >
     </div>
-    <div v-else>
-      <Spinner size="100" color="" />
+    <div class="spinnerContainer" v-else>
+      <Spinner size="90" color="" />
     </div>
   </div>
 </template>

@@ -41,8 +41,15 @@ export default {
       // speedX = 0.05 - 0.2
       // speedY = 0.005 - 0.03
       circles.value.children.forEach((circle) => {
+        let minSize = 30,
+          maxSize;
+        if (window.innerWidth > 1000) {
+          maxSize = 100;
+        } else {
+          maxSize = 60;
+        }
         let fps = 5;
-        let size = randomNum(35, 100);
+        let size = randomNum(minSize, maxSize);
         let speedY = randomArrItem([
           randomNum(0.025, 0.05),
           randomNum(-0.05, -0.025),

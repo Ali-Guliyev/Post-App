@@ -8,7 +8,7 @@ const getCollection = (collection, orderBy, query) => {
   let collectionRef = projectFirestore.collection(collection);
 
   if (orderBy) {
-    collectionRef.orderBy(orderBy);
+    collectionRef = collectionRef.orderBy(orderBy, "desc");
   }
 
   if (query) {

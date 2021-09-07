@@ -1,8 +1,6 @@
 import { ref } from "vue";
 import { projectAuth } from "../firebase/config";
 
-import getCollection from "./getCollection";
-
 const user = ref(projectAuth.currentUser);
 
 // auth changes

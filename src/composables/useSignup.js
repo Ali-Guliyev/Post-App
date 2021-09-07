@@ -9,6 +9,10 @@ const signup = async (email, password, displayName) => {
   isPending.value = true;
 
   try {
+    if (displayName > 18) {
+      throw Error("Display name should be less than 18 characters");
+    }
+
     const res = await projectAuth.createUserWithEmailAndPassword(
       email,
       password

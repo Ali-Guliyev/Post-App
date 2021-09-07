@@ -1,9 +1,16 @@
 <template>
-  <h1>All Posts</h1>
+  <ListView v-if="docs" :posts="docs" />
 </template>
 
 <script>
+import getCollection from "@/composables/getCollection";
+import ListView from "@/components/ListView.vue";
 export default {
-  setup() {},
+  components: { ListView },
+  setup() {
+    const { documents: docs, error } = getCollection("posts", "createdAt");
+
+    return { docs };
+  },
 };
 </script>

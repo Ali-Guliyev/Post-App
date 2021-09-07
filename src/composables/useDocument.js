@@ -1,5 +1,15 @@
 import { ref } from "vue";
 import { projectFirestore } from "../firebase/config";
+import { projectAuth } from "../firebase/config";
+
+const lengthLimits = {
+  user: {
+    displayName: 17,
+    bio: 250,
+    location: 20,
+  },
+  post: {},
+};
 
 const useDocument = (collection, id) => {
   const error = ref(null);
@@ -26,8 +36,27 @@ const useDocument = (collection, id) => {
     error.value = null;
 
     try {
+      if (collection == "users" && !updates.photoURL) {
+        for (let limit in lengthLimits.user) {
+          if (updates[limit].length > lengthLimits.user[limit]) {
+            let newLimit = limit.charAt(0).toUpperCase() + limit.slice(1);
+            throw Error(
+              `${newLimit} should have less than ${lengthLimits.user[limit]} characters`
+            );
+          }
+        }
+      }
+
       const res = await docRef.update(updates);
       isPending.value = false;
+
+      // If collection is "users" then change the displayName
+      if (collection == "users") {
+        await projectAuth.currentUser.updateProfile({
+          displayName: updates.displayName,
+        });
+      }
+
       return res;
     } catch (err) {
       error.value = err.message;

@@ -4,6 +4,7 @@ import Auth from "../views/Auth.vue";
 import AllPosts from "../views/posts/AllPosts.vue";
 import UserProfile from "../views/users/UserProfile.vue";
 import EditProfile from "../views/users/EditProfile.vue";
+import CreatePost from "../views/posts/CreatePost.vue";
 import NotFound from "../views/NotFound.vue";
 
 import { projectAuth } from "@/firebase/config";
@@ -56,6 +57,12 @@ const routes = [
     name: "EditProfile",
     component: EditProfile,
     props: true,
+    beforeEnter: requireAuth,
+  },
+  {
+    path: "/createpost",
+    name: "CreatePost",
+    component: CreatePost,
     beforeEnter: requireAuth,
   },
   // 404

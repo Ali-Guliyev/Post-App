@@ -15,17 +15,23 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .spinner {
   border: 5px solid transparent;
   border-radius: 50%;
   animation: spin 1s ease infinite;
-  margin-top: 30px;
 }
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
+}
+
+.spinnerContainer {
+  text-align: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 </style>

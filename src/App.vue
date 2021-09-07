@@ -1,5 +1,14 @@
 <template>
-  <AnimationBackground amount="10" bgColor="white" v-if="$route.path != '/'" />
+  <AnimationBackground
+    v-if="$route.name != 'Home'"
+    amount="10"
+    bgColor="white"
+  />
+  <!-- <AnimationBackground
+    v-if="$route.name == 'AllPosts'"
+    amount="30"
+    bgColor="white"
+  /> -->
   <div class="page-wrapper">
     <Navbar />
     <router-view />
@@ -11,6 +20,7 @@
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import AnimationBackground from "@/components/AnimationBackground.vue";
+
 export default {
   components: {
     Navbar,
