@@ -1,6 +1,10 @@
 <template>
   <AnimationBackground
-    v-if="$route.name != 'Home'"
+    v-if="
+      $route.name != 'Home' &&
+        $route.name != 'AllPosts' &&
+        $route.name != 'UserPosts'
+    "
     amount="10"
     bgColor="white"
   />

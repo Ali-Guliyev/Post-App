@@ -5,7 +5,7 @@
 
       <div class="inputContainer">
         <label>Message</label>
-        <input v-model="message" placeholder="Enter message" required />
+        <textarea v-model="message" placeholder="Enter message" required />
       </div>
 
       <div class="inputContainer" style="margin-bottom: 10px;">
@@ -21,7 +21,7 @@
         </label>
       </div>
 
-      <img v-if="file" class="postImage" :src="filePath" alt="" />
+      <img v-if="file" class="postImage" :src="fileData" alt="" />
 
       <input
         id="file-input"
@@ -39,6 +39,7 @@
       </div>
 
       <p class="error" v-if="fileError">{{ fileError }}</p>
+      <p class="error" v-if="error">{{ error }}</p>
     </form>
   </section>
 </template>
@@ -47,7 +48,7 @@
 import getFile from "@/composables/getFile";
 import useStorage from "@/composables/useStorage";
 import Spinner from "@/components/Spinner";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import useCollection from "@/composables/useCollection";
 import getUser from "@/composables/getUser";
 import { useRouter } from "vue-router";
@@ -57,7 +58,7 @@ export default {
   setup() {
     const {
       file,
-      filePath,
+      fileData,
       fileError,
       handleChange,
       filteredFileName,
@@ -65,10 +66,14 @@ export default {
     const message = ref(null);
     const hiddenInp = ref(null);
     const { user } = getUser();
-    const { uploadImage, url } = useStorage();
+    const { uploadImage, url, filePath } = useStorage();
     const { error, addDoc } = useCollection("posts");
     const router = useRouter();
     const isPending = ref(false);
+
+    onMounted(() => {
+      file.value = null;
+    });
 
     const handleSubmit = async () => {
       isPending.value = true;
@@ -80,6 +85,7 @@ export default {
         userId: user.value.uid,
         photoURL: url.value,
         createdAt: timestamp(),
+        filePath: filePath.value,
       });
       if (!error.value) {
         router.push({ name: "AllPosts" });
@@ -92,7 +98,7 @@ export default {
 
     return {
       file,
-      filePath,
+      fileData,
       fileError,
       handleChange,
       hiddenInp,
@@ -105,3 +111,24 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.form-section {
+  margin-top: 60px;
+}
+
+@media screen and (max-width: 1000px) {
+  .inputContainer .fileButton,
+  .inputContainer textarea {
+    font-size: 11px;
+  }
+
+  .inputContainer .fileButton img {
+    width: 15px;
+  }
+
+  .form-wrapper .postImage {
+    height: 150px;
+  }
+}
+</style>

@@ -9,6 +9,7 @@
   "dependencies": {
     "8": "0.0.1",
     "core-js": "^3.6.5",
+    "date-fns": "^2.23.0",
     "firebase": "^8.10.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
@@ -19,7 +20,9 @@
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0"
+    "@vue/compiler-sfc": "^3.0.0",
+    "node-sass": "^6.0.1",
+    "sass-loader": "^12.1.0"
   },
   "browserslist": [
     "> 1%",

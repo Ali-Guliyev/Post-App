@@ -10,7 +10,7 @@
             v-if="user.photoURL"
             class="profile"
             :style="{
-              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${filePath})`,
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${fileData})`,
             }"
           >
             <img src="@/assets/images/addphoto.svg" alt="" />
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import useStorage from "@/composables/useStorage";
 import getFile from "@/composables/getFile";
 import getUser from "@/composables/getUser";
@@ -86,7 +86,7 @@ export default {
   setup() {
     const {
       file,
-      filePath,
+      fileData,
       fileError,
       handleChange,
       filteredFileName,
@@ -100,11 +100,16 @@ export default {
     const router = useRouter();
 
     watch(user, () => {
-      filePath.value = user.value.photoURL;
+      fileData.value = user.value.photoURL;
     });
 
     const handleSubmit = async () => {
       isPending.value = true;
+      await updateDoc({
+        displayName: user.value.displayName,
+        bio: user.value.bio,
+        location: user.value.location,
+      });
       if (file.value) {
         await uploadImage(
           file.value,
@@ -113,12 +118,6 @@ export default {
           currentUser.value.uid
         );
       }
-      const updatedUser = {
-        displayName: user.value.displayName,
-        bio: user.value.bio,
-        location: user.value.location,
-      };
-      await updateDoc(updatedUser);
       if (!error.value) {
         router.push({
           name: "UserProfile",
@@ -135,7 +134,7 @@ export default {
       fileError,
       user,
       handleChange,
-      filePath,
+      fileData,
       isPending,
       error,
       filteredFileName,
@@ -178,6 +177,6 @@ export default {
 }
 
 .form-section {
-  margin-top: 20px;
+  margin-top: 40px;
 }
 </style>

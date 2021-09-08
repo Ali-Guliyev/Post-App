@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 
 const fileError = ref(null);
-const filePath = ref(null);
+const fileData = ref(null);
 const file = ref(null);
 
 // allowed types
@@ -14,7 +14,7 @@ const handleChange = (hiddenInp) => {
     const reader = new FileReader();
     file.value = selected;
     reader.onload = () => {
-      filePath.value = reader.result;
+      fileData.value = reader.result;
     };
     reader.readAsDataURL(selected);
   } else if (!selected) {
@@ -32,7 +32,7 @@ const filteredFileName = (string, limit) => {
 };
 
 const getFile = () => {
-  return { fileError, filePath, file, handleChange, filteredFileName };
+  return { fileError, fileData, file, handleChange, filteredFileName };
 };
 
 export default getFile;

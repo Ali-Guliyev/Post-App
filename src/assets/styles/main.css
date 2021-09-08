@@ -20,6 +20,10 @@ body {
   color: #515151;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   position: relative;
@@ -34,6 +38,12 @@ body {
 
 .error {
   color: #ff6666;
+}
+
+.post,
+.dropdown-content {
+  -webkit-box-shadow: 0 4px 11px #61c8bb;
+          box-shadow: 0 4px 11px #61c8bb;
 }
 
 .burgerMenu {
@@ -188,8 +198,8 @@ body {
   margin: 0 auto;
   max-width: 550px;
   padding-bottom: 40px;
-  -webkit-box-shadow: 0 4px 10px #61c8bb;
-          box-shadow: 0 4px 10px #61c8bb;
+  -webkit-box-shadow: 0 4px 11px #61c8bb;
+          box-shadow: 0 4px 11px #61c8bb;
   border-radius: 40px;
   background: white;
 }
@@ -234,6 +244,7 @@ a .nav-link p:hover::after,
 
 .page-wrapper {
   min-height: 95vh;
+  padding-top: 9vh;
 }
 
 .btn {
@@ -270,6 +281,12 @@ a .nav-link p:hover::after,
 .nav-container {
   padding: 20px 50px;
   border-bottom: 3px solid #0de6cb;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  background-color: white;
 }
 
 .nav-container nav {
@@ -657,6 +674,7 @@ header .img-container img {
   }
   .page-wrapper {
     min-height: 96vh;
+    padding-top: 7vh;
   }
   .user {
     text-align: center;
@@ -734,5 +752,24 @@ header .img-container img {
   a.router-link-active .nav-link p::after {
     width: 100%;
   }
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 5px grey;
+          box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0de6cb;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #108679;
 }
 /*# sourceMappingURL=main.css.map */

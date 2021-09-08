@@ -17,7 +17,7 @@
             <router-link @click="toggleMenu" :to="{ name: 'AllPosts' }"
               ><li class="nav-link"><p>All Posts</p></li></router-link
             >
-            <router-link @click="toggleMenu" :to="{ name: 'Home' }">
+            <router-link @click="toggleMenu" :to="{ name: 'UserPosts' }">
               <li class="nav-link"><p>My Posts</p></li></router-link
             >
             <router-link @click="toggleMenu" :to="{ name: 'CreatePost' }">
