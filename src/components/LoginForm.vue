@@ -15,12 +15,10 @@
       />
     </div>
 
-    <center>
-      <button class="btn" v-if="!isPending">
-        Login
-      </button>
-      <Spinner v-else size="50" color="#0DE6CB" />
-    </center>
+    <button class="btn" v-if="!isPending">
+      Login
+    </button>
+    <Spinner v-else size="50" color="#0DE6CB" />
 
     <div v-if="error" class="error">
       <p>{{ error }}</p>

@@ -7,7 +7,9 @@
       alt=""
     />
     <div class="dropdown-content" :id="id">
-      <router-link class="dropdownEl" :to="{ name: 'Home' }">Edit</router-link>
+      <router-link class="dropdownEl" :to="{ name: 'EditPost', params: { id } }"
+        >Edit</router-link
+      >
       <div class="dropdownEl delete" @click="$emit('handleDelete')">Delete</div>
     </div>
   </div>

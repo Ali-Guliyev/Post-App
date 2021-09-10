@@ -12,7 +12,7 @@
         {{ user.bio }}
       </p>
       <div class="other">
-        <div class="location">
+        <div class="location" v-if="user.location">
           <img src="@/assets/images/location.svg" />
           <p>{{ user.location }}</p>
         </div>

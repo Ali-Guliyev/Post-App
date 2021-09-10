@@ -51,6 +51,7 @@ import { computed } from "@vue/reactivity";
 import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import useStorage from "@/composables/useStorage";
+import { months } from "@/composables/getDate";
 import getCollection from "@/composables/getCollection";
 import Spinner from "@/components/Spinner.vue";
 import Dropdown from "@/components/Dropdown.vue";
@@ -79,8 +80,6 @@ export default {
     const handleDelete = async (post) => {
       const { deleteDoc } = useDocument("posts", post.id);
       const { deleteImage } = useStorage();
-
-      console.log(post.id);
       await deleteDoc();
       await deleteImage(post.filePath);
     };
@@ -89,12 +88,15 @@ export default {
       if (props.posts && users.value) {
         return props.posts.map((post, index) => {
           const user = getUserById(post.userId);
-          let time = formatDistanceToNow(post.createdAt.toDate());
+          const date = post.createdAt.toDate();
+          let datePosted = `${months[date.getMonth()]} ${date.getDate()}`;
+          let time = formatDistanceToNow(date);
           return {
             ...props.posts[index],
             userName: user.displayName,
             userImage: user.photoURL,
             createdAt: time,
+            datePosted,
           };
         });
       }
@@ -142,7 +144,7 @@ export default {
   width: 100%;
   border-radius: 20px;
   max-height: 300px;
-  object-fit: cover;
+  object-fit: contain;
   margin-bottom: 25px;
 }
 

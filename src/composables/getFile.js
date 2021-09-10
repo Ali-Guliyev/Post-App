@@ -5,7 +5,7 @@ const fileData = ref(null);
 const file = ref(null);
 
 // allowed types
-const types = ["image/png", "image/jpeg"];
+const types = ["image/png", "image/jpeg", "image/gif"];
 
 const handleChange = (hiddenInp) => {
   const selected = hiddenInp.files[0];
@@ -20,7 +20,7 @@ const handleChange = (hiddenInp) => {
   } else if (!selected) {
     fileError.value = "Please choose an image";
   } else {
-    fileError.value = "Please select an image file (png or jpg)";
+    fileError.value = "Please select an image file (png, jpg or gif)";
   }
 };
 

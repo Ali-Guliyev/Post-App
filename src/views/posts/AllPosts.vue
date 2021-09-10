@@ -5,7 +5,6 @@
 <script>
 import getCollection from "@/composables/getCollection";
 import ListView from "@/components/ListView.vue";
-import { onMounted } from "@vue/runtime-core";
 export default {
   components: { ListView },
   setup() {

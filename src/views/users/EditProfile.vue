@@ -35,18 +35,14 @@
 
         <div class="inputContainer">
           <label>Bio</label>
-          <textarea
-            v-model="user.bio"
-            placeholder="Enter display name"
-            required
-          />
+          <textarea v-model="user.bio" placeholder="Enter biography" required />
         </div>
 
         <div class="inputContainer">
           <label>Location</label>
           <input
             v-model="user.location"
-            placeholder="Enter display name"
+            placeholder="Enter your location"
             required
           />
         </div>
@@ -91,7 +87,7 @@ export default {
       handleChange,
       filteredFileName,
     } = getFile();
-    const { uploadImage } = useStorage();
+    const { uploadImage, url } = useStorage();
     const { user: currentUser } = getUser();
     const { document: user } = getDocument("users", currentUser.value.uid);
     const { updateDoc, error } = useDocument("users", currentUser.value.uid);
@@ -101,23 +97,20 @@ export default {
 
     watch(user, () => {
       fileData.value = user.value.photoURL;
+      file.value = null;
     });
 
     const handleSubmit = async () => {
       isPending.value = true;
+      if (file.value) {
+        await uploadImage(file.value, "profilePictures", "users");
+      }
       await updateDoc({
         displayName: user.value.displayName,
         bio: user.value.bio,
         location: user.value.location,
       });
-      if (file.value) {
-        await uploadImage(
-          file.value,
-          "profilePictures",
-          "users",
-          currentUser.value.uid
-        );
-      }
+      console.log(url.value);
       if (!error.value) {
         router.push({
           name: "UserProfile",

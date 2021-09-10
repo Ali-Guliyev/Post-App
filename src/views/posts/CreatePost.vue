@@ -1,5 +1,5 @@
 <template>
-  <section class="form-section">
+  <section class="form-section postform">
     <form class="form-wrapper" @submit.prevent="handleSubmit">
       <h1>Create Post</h1>
 
@@ -50,6 +50,7 @@ import useStorage from "@/composables/useStorage";
 import Spinner from "@/components/Spinner";
 import { onMounted, ref } from "vue";
 import useCollection from "@/composables/useCollection";
+import { months } from "@/composables/getDate";
 import getUser from "@/composables/getUser";
 import { useRouter } from "vue-router";
 import { timestamp } from "@/firebase/config";
@@ -76,6 +77,7 @@ export default {
     });
 
     const handleSubmit = async () => {
+      let date = new Date();
       isPending.value = true;
       if (file.value) {
         await uploadImage(file.value, "postImages");
@@ -86,6 +88,7 @@ export default {
         photoURL: url.value,
         createdAt: timestamp(),
         filePath: filePath.value,
+        datePosted: `${months[date.getMonth()]} ${date.getDate()}`,
       });
       if (!error.value) {
         router.push({ name: "AllPosts" });
@@ -112,22 +115,22 @@ export default {
 };
 </script>
 
-<style scoped>
-.form-section {
+<style>
+.form-section.postform {
   margin-top: 60px;
 }
 
 @media screen and (max-width: 1000px) {
-  .inputContainer .fileButton,
-  .inputContainer textarea {
+  .form-section.postform .inputContainer .fileButton,
+  .form-section.postform .inputContainer textarea {
     font-size: 11px;
   }
 
-  .inputContainer .fileButton img {
+  .form-section.postform .inputContainer .fileButton img {
     width: 15px;
   }
 
-  .form-wrapper .postImage {
+  .form-section.postform .form-wrapper .postImage {
     height: 150px;
   }
 }

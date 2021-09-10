@@ -19,12 +19,10 @@
       />
     </div>
 
-    <center>
-      <button class="btn" v-if="!isPending">
-        Signup
-      </button>
-      <Spinner v-else size="50" color="#0DE6CB" />
-    </center>
+    <button class="btn" v-if="!isPending">
+      Signup
+    </button>
+    <Spinner v-else size="50" color="#0DE6CB" />
 
     <div v-if="error" class="error">
       <p>{{ error }}</p>
@@ -38,6 +36,7 @@ import useSignup from "@/composables/useSignup";
 import useCollection from "@/composables/useCollection";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { months } from "@/composables/getDate";
 export default {
   components: { Spinner },
   setup() {
@@ -48,38 +47,27 @@ export default {
     const displayName = ref("");
     const router = useRouter();
     const fileInput = ref(null);
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
 
     const handleSubmit = async () => {
       let date = new Date();
       let joinDate = `${
         months[date.getMonth()]
       } ${date.getDate()}, ${date.getFullYear()}`;
-      let location;
-      await fetch("http://ip-api.com/json")
-        .then((res) => res.json())
-        .then((data) => {
-          location = `${data.city}, ${data.country}`;
-        });
+      let location = null;
       let creds;
+      // if (window.innerWidth > 1000) {
+      //   await fetch("http://ip-api.com/json")
+      //     .then((res) => res.json())
+      //     .then((data) => {
+      //       location = `${data.city}, ${data.country}`;
+      //     });
+      // }
       await signup(email.value, password.value, displayName.value).then(
         (cred) => {
           creds = cred;
         }
       );
+
       await addDoc(
         {
           displayName: creds.user.displayName,
@@ -91,8 +79,8 @@ export default {
         },
         creds.user.uid
       );
+
       if (!error.value) {
-        console.log("successully signed up!");
         router.push({ name: "AllPosts" });
       }
     };

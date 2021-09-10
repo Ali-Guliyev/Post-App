@@ -7,6 +7,7 @@ import EditProfile from "../views/users/EditProfile.vue";
 import CreatePost from "../views/posts/CreatePost.vue";
 import NotFound from "../views/NotFound.vue";
 import UserPosts from "../views/posts/UserPosts.vue";
+import EditPost from "../views/posts/EditPost.vue";
 
 import { projectAuth } from "@/firebase/config";
 
@@ -64,6 +65,12 @@ const routes = [
     path: "/createpost",
     name: "CreatePost",
     component: CreatePost,
+    beforeEnter: requireAuth,
+  },
+  {
+    path: "/editpost/:id",
+    name: "EditPost",
+    component: EditPost,
     beforeEnter: requireAuth,
   },
   {
