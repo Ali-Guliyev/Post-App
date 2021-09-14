@@ -8,8 +8,8 @@
               :to="{ name: 'UserProfile', params: { id: post.userId } }"
             >
               <img
-                v-if="post.userImage"
-                :src="post.userImage"
+                v-if="getUserById(post.userId).photoURL"
+                :src="getUserById(post.userId).photoURL"
                 alt=""
                 class="userImage"
               />
@@ -26,7 +26,9 @@
               :to="{ name: 'UserProfile', params: { id: post.userId } }"
             >
               <p class="userName" v-if="ownership(post.userId)">You</p>
-              <p class="userName" v-else>{{ post.userName }}</p>
+              <p class="userName" v-else>
+                {{ getUserById(post.userId).displayName }}
+              </p>
             </router-link>
             <p class="postDate">{{ post.createdAt }} ago</p>
           </div>
@@ -84,7 +86,6 @@ export default {
   setup(props) {
     const { user: currentUser } = getUser();
     const { documents: users } = getCollection("users");
-    const { document: user } = getDocument("users", currentUser.value.uid);
     const ownership = (id) => currentUser.value && currentUser.value.uid == id;
 
     const getUserById = (id) => {
@@ -126,7 +127,6 @@ export default {
     const formattedPosts = computed(() => {
       if (props.posts && users.value) {
         return props.posts.map((post, index) => {
-          const user = getUserById(post.userId);
           const date = post.createdAt.toDate();
           let datePosted = `${months[date.getMonth()]} ${date.getDate()}`;
           let time = formatDistanceToNow(date);
@@ -139,10 +139,9 @@ export default {
               }
             });
           }
+
           return {
             ...props.posts[index],
-            userName: user.displayName,
-            userImage: user.photoURL,
             createdAt: time,
             datePosted,
             isLiked,
