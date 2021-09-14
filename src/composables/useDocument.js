@@ -1,15 +1,7 @@
 import { ref } from "vue";
 import { projectFirestore } from "../firebase/config";
 import { projectAuth } from "../firebase/config";
-
-const lengthLimits = {
-  user: {
-    displayName: 17,
-    bio: 250,
-    location: 20,
-  },
-  post: {},
-};
+import lengthLimits from "./getLengthLimits.js";
 
 const useDocument = (collection, id) => {
   const error = ref(null);
@@ -36,14 +28,26 @@ const useDocument = (collection, id) => {
     error.value = null;
 
     try {
-      if (collection == "users" && !updates.photoURL) {
+      if (collection == "users") {
         for (let limit in lengthLimits.user) {
-          if (updates[limit].length > lengthLimits.user[limit]) {
+          if (
+            updates[limit] &&
+            updates[limit].length > lengthLimits.user[limit]
+          ) {
             let newLimit = limit.charAt(0).toUpperCase() + limit.slice(1);
             throw Error(
               `${newLimit} should have less than ${lengthLimits.user[limit]} characters`
             );
           }
+        }
+      } else if (collection == "posts") {
+        if (
+          updates.message &&
+          updates.message.length > lengthLimits.post.message
+        ) {
+          throw Error(
+            `Message should have less than ${lengthLimits.post.message} characters`
+          );
         }
       }
 

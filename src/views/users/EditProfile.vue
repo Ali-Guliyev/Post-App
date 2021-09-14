@@ -7,7 +7,7 @@
         <div class="profileImage">
           <label
             for="file-input"
-            v-if="user.photoURL"
+            v-if="fileData"
             class="profile"
             :style="{
               backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${fileData})`,
@@ -40,11 +40,7 @@
 
         <div class="inputContainer">
           <label>Location</label>
-          <input
-            v-model="user.location"
-            placeholder="Enter your location"
-            required
-          />
+          <input v-model="user.location" placeholder="Enter your location" />
         </div>
 
         <input
@@ -105,12 +101,14 @@ export default {
       if (file.value) {
         await uploadImage(file.value, "profilePictures", "users");
       }
+
       await updateDoc({
         displayName: user.value.displayName,
         bio: user.value.bio,
         location: user.value.location,
+        photoURL: url.value ? url.value : currentUser.value.photoURL,
       });
-      console.log(url.value);
+
       if (!error.value) {
         router.push({
           name: "UserProfile",

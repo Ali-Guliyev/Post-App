@@ -8,9 +8,9 @@
       <div v-if="user">
         <div class="links-container" ref="linksContainer">
           <img
-            class="expandBtn"
+            class="rightArrowBtn"
             @click="toggleMenu"
-            src="@/assets/images/expand.svg"
+            src="@/assets/images/rightArrow.svg"
           />
 
           <ul class="nav-links">

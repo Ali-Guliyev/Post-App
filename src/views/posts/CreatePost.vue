@@ -21,7 +21,15 @@
         </label>
       </div>
 
-      <img v-if="file" class="postImage" :src="fileData" alt="" />
+      <div v-if="file" class="postImageContainer">
+        <img
+          @click="clearFile"
+          class="closeImage"
+          src="@/assets/images/close.svg"
+          alt=""
+        />
+        <img class="postImage" :src="fileData" alt="" />
+      </div>
 
       <input
         id="file-input"
@@ -63,6 +71,7 @@ export default {
       fileError,
       handleChange,
       filteredFileName,
+      clearFile,
     } = getFile();
     const message = ref(null);
     const hiddenInp = ref(null);
@@ -89,6 +98,7 @@ export default {
         createdAt: timestamp(),
         filePath: filePath.value,
         datePosted: `${months[date.getMonth()]} ${date.getDate()}`,
+        likes: [],
       });
       if (!error.value) {
         router.push({ name: "AllPosts" });
@@ -110,6 +120,7 @@ export default {
       isPending,
       error,
       filteredFileName,
+      clearFile,
     };
   },
 };
@@ -120,10 +131,28 @@ export default {
   margin-top: 60px;
 }
 
+.form-section.postform .postImageContainer {
+  position: relative;
+}
+
+.form-section.postform .postImageContainer .closeImage {
+  background-color: white;
+  border-radius: 50%;
+  width: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1000px) {
   .form-section.postform .inputContainer .fileButton,
   .form-section.postform .inputContainer textarea {
     font-size: 11px;
+  }
+
+  .form-section.postform .postImageContainer .closeImage {
+    width: 16px;
   }
 
   .form-section.postform .inputContainer .fileButton img {

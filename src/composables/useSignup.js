@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { projectAuth } from "../firebase/config";
+import lengthLimits from "./getLengthLimits.js";
 
 const error = ref(null);
 const isPending = ref(false);
@@ -9,8 +10,10 @@ const signup = async (email, password, displayName) => {
   isPending.value = true;
 
   try {
-    if (displayName > 18) {
-      throw Error("Display name should be less than 18 characters");
+    if (displayName.length > lengthLimits.user.displayName) {
+      throw Error(
+        `Display name should have less than ${lengthLimits.user.displayName} characters`
+      );
     }
 
     const res = await projectAuth.createUserWithEmailAndPassword(

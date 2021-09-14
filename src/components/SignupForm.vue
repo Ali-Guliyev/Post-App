@@ -46,7 +46,6 @@ export default {
     const password = ref("");
     const displayName = ref("");
     const router = useRouter();
-    const fileInput = ref(null);
 
     const handleSubmit = async () => {
       let date = new Date();
@@ -76,12 +75,13 @@ export default {
           bio: "Hi there! I am using Post App.",
           location,
           joinDate,
+          likedPosts: [],
         },
         creds.user.uid
       );
 
       if (!error.value) {
-        router.push({ name: "AllPosts" });
+        router.push({ name: "UserPosts" });
       }
     };
 
@@ -92,7 +92,6 @@ export default {
       displayName,
       error,
       isPending,
-      fileInput,
     };
   },
 };

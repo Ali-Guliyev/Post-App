@@ -24,6 +24,12 @@ const handleChange = (hiddenInp) => {
   }
 };
 
+const clearFile = () => {
+  file.value = null;
+  fileData.value = null;
+  fileError.value = null;
+};
+
 const filteredFileName = (string, limit) => {
   if (string.length >= limit) {
     return string.substring(0, limit) + "...";
@@ -32,7 +38,14 @@ const filteredFileName = (string, limit) => {
 };
 
 const getFile = () => {
-  return { fileError, fileData, file, handleChange, filteredFileName };
+  return {
+    fileError,
+    fileData,
+    file,
+    handleChange,
+    filteredFileName,
+    clearFile,
+  };
 };
 
 export default getFile;

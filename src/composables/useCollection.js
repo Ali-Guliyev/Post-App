@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { projectFirestore } from "@/firebase/config";
+import lengthLimits from "./getLengthLimits";
 
 const useCollection = (collection) => {
   const error = ref(null);
@@ -10,6 +11,15 @@ const useCollection = (collection) => {
     isPending.value = true;
 
     try {
+      if (
+        collection == "posts" &&
+        doc.message.length > lengthLimits.post.message
+      ) {
+        throw Error(
+          `Message should have less than ${lengthLimits.post.message} characters`
+        );
+      }
+
       let res = "";
       if (id) {
         res = await projectFirestore

@@ -1,6 +1,6 @@
 <template>
   <div v-if="formattedPosts != null">
-    <div class="posts" v-for="post in formattedPosts" :key="post.id">
+    <div class="posts" v-for="(post, index) in formattedPosts" :key="post.id">
       <div class="post">
         <div class="row">
           <div class="col-1">
@@ -38,6 +38,26 @@
           <p class="message">{{ post.message }}</p>
           <img v-if="post.photoURL" class="postImage" :src="post.photoURL" />
         </div>
+
+        <div class="action">
+          <div class="like" @click="handleLike(post, index)">
+            <img
+              v-if="post.isLiked"
+              class="static"
+              src="@/assets/images/liked.svg"
+            />
+            <img v-else class="static" src="@/assets/images/like.svg" />
+            <img class="hover" src="@/assets/images/likeHover.svg" />
+            <span :style="{ color: post.isLiked ? '#0DE6CB' : '#515151' }">{{
+              post.likes.length
+            }}</span>
+          </div>
+          <div class="comment">
+            <img class="static" src="@/assets/images/comment.svg" />
+            <img class="hover" src="@/assets/images/commentHover.svg" />
+            <span>0</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -50,19 +70,21 @@
 import { computed } from "@vue/reactivity";
 import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
+import getDocument from "@/composables/getDocument";
 import useStorage from "@/composables/useStorage";
 import { months } from "@/composables/getDate";
 import getCollection from "@/composables/getCollection";
 import Spinner from "@/components/Spinner.vue";
 import Dropdown from "@/components/Dropdown.vue";
 import { formatDistanceToNow } from "date-fns";
+import { onMounted, watch } from "@vue/runtime-core";
 export default {
   props: ["posts"],
   components: { Spinner, Dropdown },
   setup(props) {
     const { user: currentUser } = getUser();
     const { documents: users } = getCollection("users");
-
+    const { document: user } = getDocument("users", currentUser.value.uid);
     const ownership = (id) => currentUser.value && currentUser.value.uid == id;
 
     const getUserById = (id) => {
@@ -75,6 +97,23 @@ export default {
         });
       }
       return res;
+    };
+
+    const handleLike = async (post, index) => {
+      const { updateDoc } = useDocument("posts", post.id);
+
+      if (!post.isLiked) {
+        await updateDoc({
+          likes: [...post.likes, { userId: currentUser.value.uid }],
+        });
+      } else {
+        let likes = post.likes.filter(
+          (like) => like.userId != currentUser.value.uid
+        );
+        await updateDoc({
+          likes,
+        });
+      }
     };
 
     const handleDelete = async (post) => {
@@ -91,18 +130,34 @@ export default {
           const date = post.createdAt.toDate();
           let datePosted = `${months[date.getMonth()]} ${date.getDate()}`;
           let time = formatDistanceToNow(date);
+
+          let isLiked = false;
+          if (post.likes.length) {
+            post.likes.forEach((like) => {
+              if (like.userId == currentUser.value.uid) {
+                isLiked = true;
+              }
+            });
+          }
           return {
             ...props.posts[index],
             userName: user.displayName,
             userImage: user.photoURL,
             createdAt: time,
             datePosted,
+            isLiked,
           };
         });
       }
     });
 
-    return { getUserById, ownership, formattedPosts, handleDelete };
+    return {
+      getUserById,
+      ownership,
+      formattedPosts,
+      handleDelete,
+      handleLike,
+    };
   },
 };
 </script>
@@ -138,6 +193,7 @@ export default {
 .message {
   font-size: 17px;
   margin: 20px 0 13px 0;
+  width: 100%;
 }
 
 .postImage {
@@ -145,7 +201,42 @@ export default {
   border-radius: 20px;
   max-height: 300px;
   object-fit: contain;
-  margin-bottom: 25px;
+}
+
+.action {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 100px;
+}
+
+.action img.hover {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.action img,
+.action span {
+  transition: all 0.15s ease;
+}
+
+.action div:hover img.hover {
+  opacity: 1;
+}
+
+.action div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.action span {
+  font-size: 19px;
+  margin-left: 5px;
 }
 
 .row {
@@ -168,6 +259,19 @@ export default {
 }
 
 @media screen and (max-width: 1000px) {
+  .action {
+    padding-top: 7px;
+    padding-bottom: 5px;
+  }
+
+  .action img {
+    width: 22px;
+  }
+
+  .action span {
+    font-size: 15px;
+  }
+
   .posts {
     max-width: 400px;
     margin: 0 auto;
@@ -175,6 +279,7 @@ export default {
 
   .post {
     padding: 25px;
+    padding-bottom: 12px;
   }
 
   .userImage {

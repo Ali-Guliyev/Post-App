@@ -21,7 +21,15 @@
         </label>
       </div>
 
-      <img v-if="fileData" class="postImage" :src="fileData" alt="" />
+      <div v-if="fileData" class="postImageContainer">
+        <img
+          @click="clearFile"
+          class="closeImage"
+          src="@/assets/images/close.svg"
+          alt=""
+        />
+        <img class="postImage" :src="fileData" alt="" />
+      </div>
 
       <input
         id="file-input"
@@ -32,7 +40,7 @@
       />
 
       <button class="btn" v-if="!isPending">
-        Create
+        Edit
       </button>
       <div v-else>
         <Spinner size="60" color="" />
@@ -61,6 +69,7 @@ export default {
       fileError,
       handleChange,
       filteredFileName,
+      clearFile,
     } = getFile();
     const route = useRoute();
     const router = useRouter();
@@ -98,6 +107,7 @@ export default {
       hiddenInp,
       filteredFileName,
       handleChange,
+      clearFile,
       isPending,
       fileError,
       handleSubmit,

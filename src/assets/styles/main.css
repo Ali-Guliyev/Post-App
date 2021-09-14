@@ -326,7 +326,7 @@ a .nav-link p:hover::after,
   width: 45px;
 }
 
-.nav-container nav .expandBtn {
+.nav-container nav .rightArrowBtn {
   width: 25px;
   cursor: pointer;
   display: none;
@@ -614,7 +614,7 @@ header .img-container img {
     position: absolute;
     bottom: 0;
   }
-  .nav-container nav .links-container .expandBtn {
+  .nav-container nav .links-container .rightArrowBtn {
     display: block;
   }
   .nav-container nav .links-container .nav-links {
