@@ -48,6 +48,14 @@ const useDocument = (collection, id) => {
           throw Error(
             `Message should have less than ${lengthLimits.post.message} characters`
           );
+        } else if (
+          updates.comments &&
+          updates.comments.length > 0 &&
+          updates.comments[0].commentMessage.length > lengthLimits.post.comments
+        ) {
+          throw Error(
+            `Comment message should have less than ${lengthLimits.post.comments} characters`
+          );
         }
       }
 

@@ -99,9 +99,10 @@ export default {
         filePath: filePath.value,
         datePosted: `${months[date.getMonth()]} ${date.getDate()}`,
         likes: [],
+        comments: [],
       });
       if (!error.value) {
-        router.push({ name: "AllPosts" });
+        router.push({ name: "UserPosts" });
         hiddenInp.value = null;
         file.value = null;
         message.value = null;

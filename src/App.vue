@@ -3,6 +3,7 @@
     v-if="
       $route.name != 'Home' &&
         $route.name != 'AllPosts' &&
+        $route.name != 'PostDetails' &&
         $route.name != 'UserPosts'
     "
     amount="10"

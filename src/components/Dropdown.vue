@@ -10,6 +10,12 @@
       <router-link class="dropdownEl" :to="{ name: 'EditPost', params: { id } }"
         >Edit</router-link
       >
+      <router-link
+        v-if="$route.name == 'AllPosts' || $route.name == 'UserPosts'"
+        class="dropdownEl"
+        :to="{ name: 'PostDetails', params: { id } }"
+        >More</router-link
+      >
       <div class="dropdownEl delete" @click="$emit('handleDelete')">Delete</div>
     </div>
   </div>
@@ -51,7 +57,11 @@ export default {
 }
 
 .dropdown {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+  z-index: 1;
 }
 
 .dropdown-content {
@@ -61,7 +71,6 @@ export default {
   top: 25px;
   left: 0;
   border-radius: 15px;
-  z-index: 1;
   background-color: white;
   overflow: hidden;
 }

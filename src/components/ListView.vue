@@ -32,8 +32,17 @@
             </router-link>
             <p class="postDate">{{ post.createdAt }} ago</p>
           </div>
-          <div class="col-3" v-if="ownership(post.userId)">
-            <Dropdown :id="post.id" @handleDelete="handleDelete(post)" />
+          <div class="col-3">
+            <div v-if="ownership(post.userId)">
+              <Dropdown :id="post.id" @handleDelete="handleDelete(post)" />
+            </div>
+            <div v-else>
+              <router-link
+                :to="{ name: 'PostDetails', params: { id: post.id } }"
+                class="moreBtn"
+                >More</router-link
+              >
+            </div>
           </div>
         </div>
         <div class="content">
@@ -54,11 +63,13 @@
               post.likes.length
             }}</span>
           </div>
-          <div class="comment">
-            <img class="static" src="@/assets/images/comment.svg" />
-            <img class="hover" src="@/assets/images/commentHover.svg" />
-            <span>0</span>
-          </div>
+          <router-link :to="{ name: 'PostDetails', params: { id: post.id } }">
+            <div class="comment">
+              <img class="static" src="@/assets/images/comment.svg" />
+              <img class="hover" src="@/assets/images/commentHover.svg" />
+              <span>{{ post.comments.length }}</span>
+            </div>
+          </router-link>
         </div>
       </div>
     </div>
@@ -72,7 +83,6 @@
 import { computed } from "@vue/reactivity";
 import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
-import getDocument from "@/composables/getDocument";
 import useStorage from "@/composables/useStorage";
 import { months } from "@/composables/getDate";
 import getCollection from "@/composables/getCollection";
@@ -128,7 +138,6 @@ export default {
       if (props.posts && users.value) {
         return props.posts.map((post, index) => {
           const date = post.createdAt.toDate();
-          let datePosted = `${months[date.getMonth()]} ${date.getDate()}`;
           let time = formatDistanceToNow(date);
 
           let isLiked = false;
@@ -143,7 +152,6 @@ export default {
           return {
             ...props.posts[index],
             createdAt: time,
-            datePosted,
             isLiked,
           };
         });
@@ -213,7 +221,6 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
 }
 
 .action img,
@@ -249,8 +256,18 @@ export default {
   align-items: center;
 }
 
-.col-2 {
+.col-3 {
   flex: 1;
+  position: relative;
+}
+
+.col-3 .moreBtn {
+  font-size: 18px;
+  color: #0de6cb;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
 }
 
 .spinner {
@@ -303,6 +320,10 @@ export default {
     margin-right: 13px;
   }
 
+  .col-3 .moreBtn {
+    font-size: 14px;
+  }
+
   .spinner {
     margin: 20px auto;
   }
@@ -315,6 +336,10 @@ export default {
   .dropdown .dropdown-content .dropdownEl {
     font-size: 13.5px;
     padding: 17px 70px;
+  }
+
+  .dropdown img {
+    width: 20px;
   }
 
   .dropdown .dropdown-content {

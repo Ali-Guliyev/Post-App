@@ -6,6 +6,7 @@ const lengthLimits = {
   },
   post: {
     message: 350,
+    comments: 350,
   },
 };
 
