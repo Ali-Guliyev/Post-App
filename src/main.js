@@ -5,6 +5,7 @@ import store from "./store";
 import { projectAuth } from "./firebase/config";
 
 import "@/assets/styles/main.css";
+import './registerServiceWorker'
 
 let app;
 
