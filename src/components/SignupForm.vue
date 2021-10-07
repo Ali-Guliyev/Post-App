@@ -36,7 +36,7 @@ import useSignup from "@/composables/useSignup";
 import useCollection from "@/composables/useCollection";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { months } from "@/composables/getDate";
+import { timestamp } from "../firebase/config";
 export default {
   components: { Spinner },
   setup() {
@@ -48,19 +48,9 @@ export default {
     const router = useRouter();
 
     const handleSubmit = async () => {
-      let date = new Date();
-      let joinDate = `${
-        months[date.getMonth()]
-      } ${date.getDate()}, ${date.getFullYear()}`;
       let location = null;
       let creds;
-      // if (window.innerWidth > 1000) {
-      //   await fetch("http://ip-api.com/json")
-      //     .then((res) => res.json())
-      //     .then((data) => {
-      //       location = `${data.city}, ${data.country}`;
-      //     });
-      // }
+      // TODO: When user signes up the location will be added by defalult with "http://ip-api.com/json" api
       await signup(email.value, password.value, displayName.value).then(
         (cred) => {
           creds = cred;
@@ -74,7 +64,7 @@ export default {
           photoURL: creds.user.photoURL,
           bio: "Hi there! I am using Post App.",
           location,
-          joinDate,
+          joinDate: timestamp(),
           likedPosts: [],
         },
         creds.user.uid

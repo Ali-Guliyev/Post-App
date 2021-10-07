@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import useStorage from "@/composables/useStorage";
 import getFile from "@/composables/getFile";
 import getUser from "@/composables/getUser";

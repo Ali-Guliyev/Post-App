@@ -40,12 +40,12 @@ section {
 
 .btn {
   margin: 14px;
-  display: flex;
-  align-items: center;
+  margin-bottom: 0;
 }
 
 .btn p {
   margin-right: 10px;
+  display: inline;
 }
 
 .btn img {

@@ -1,7 +1,8 @@
 <template>
-  <div v-if="formattedPosts != null">
-    <div class="posts" v-for="(post, index) in formattedPosts" :key="post.id">
-      <div class="post">
+  <div class="posts">
+    <SearchInput v-if="$route.name != 'UserPosts'" />
+    <div class="postsWrapper" v-if="formattedPosts != null">
+      <div class="post" v-for="(post, index) in formattedPosts" :key="post.id">
         <div class="row">
           <div class="col-1">
             <router-link
@@ -73,14 +74,14 @@
         </div>
       </div>
     </div>
-  </div>
-  <div v-else>
-    <Spinner size="50" color="" />
+    <div v-else>
+      <Spinner size="50" color="" />
+    </div>
   </div>
 </template>
 
 <script>
-import { computed } from "@vue/reactivity";
+import { computed, ref } from "@vue/reactivity";
 import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import useStorage from "@/composables/useStorage";
@@ -88,11 +89,11 @@ import { months } from "@/composables/getDate";
 import getCollection from "@/composables/getCollection";
 import Spinner from "@/components/Spinner.vue";
 import Dropdown from "@/components/Dropdown.vue";
+import SearchInput from "@/components/SearchInput.vue";
 import { formatDistanceToNow } from "date-fns";
-import { onMounted, watch } from "@vue/runtime-core";
 export default {
   props: ["posts"],
-  components: { Spinner, Dropdown },
+  components: { Spinner, Dropdown, SearchInput },
   setup(props) {
     const { user: currentUser } = getUser();
     const { documents: users } = getCollection("users");
@@ -170,12 +171,17 @@ export default {
 </script>
 
 <style>
+.posts {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 0 25px;
+}
+
 .post {
   position: relative;
-  margin: 25px auto;
-  max-width: 580px;
+  margin: 25px 0;
   border-radius: 30px;
-  padding: 40px;
+  padding: 30px;
   padding-bottom: 10px;
 }
 
@@ -274,6 +280,35 @@ export default {
   margin: 25px auto;
 }
 
+.searchInput {
+  border-radius: 12px;
+  font-size: 18px;
+  padding: 10px 15px;
+  margin-top: 20px;
+  margin-bottom: -5px;
+  border: 0;
+  box-shadow: 0 2px 5px #61c8bb;
+  color: gray;
+  transition: all 0.16s ease;
+  width: 100%;
+}
+
+.searchInput::placeholder {
+  color: gray;
+}
+
+.searchInput:focus {
+  border: 0;
+  outline: 0;
+}
+
+.searchInputContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media screen and (max-width: 1000px) {
   .action {
     padding-top: 7px;
@@ -289,7 +324,7 @@ export default {
   }
 
   .posts {
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
   }
 
@@ -344,6 +379,10 @@ export default {
 
   .dropdown .dropdown-content {
     left: -150px;
+  }
+
+  .searchInput {
+    font-size: 15px;
   }
 }
 </style>

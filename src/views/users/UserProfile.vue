@@ -35,7 +35,8 @@
 import { useRoute } from "vue-router";
 import getUser from "@/composables/getUser";
 import getDocument from "@/composables/getDocument";
-import { computed } from "vue";
+import { computed, onMounted, watch } from "vue";
+import { months } from "@/composables/getDate";
 import Spinner from "@/components/Spinner.vue";
 export default {
   components: { Spinner },
@@ -47,6 +48,13 @@ export default {
     const ownership = computed(
       () => currentUser.value && currentUser.value.uid == route.params.id
     );
+
+    watch(user, () => {
+      let joinDate = user.value.joinDate.toDate();
+      user.value.joinDate = `${
+        months[joinDate.getMonth()]
+      } ${joinDate.getDay()}, ${joinDate.getFullYear()}`;
+    });
 
     return { ownership, currentUser, error, user };
   },

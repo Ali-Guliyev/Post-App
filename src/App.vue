@@ -1,19 +1,15 @@
 <template>
   <AnimationBackground
     v-if="
-      $route.name != 'Home' &&
-        $route.name != 'AllPosts' &&
-        $route.name != 'PostDetails' &&
-        $route.name != 'UserPosts'
+      $route.name == 'Auth' ||
+        $route.name == 'CreatePost' ||
+        $route.name == 'EditPost' ||
+        $route.name == 'UserProfile' ||
+        $route.name == 'EditProfile'
     "
     amount="10"
     bgColor="white"
   />
-  <!-- <AnimationBackground
-    v-if="$route.name == 'AllPosts'"
-    amount="30"
-    bgColor="white"
-  /> -->
   <div class="page-wrapper">
     <Navbar />
     <router-view />

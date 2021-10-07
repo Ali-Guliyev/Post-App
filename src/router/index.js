@@ -9,6 +9,7 @@ import NotFound from "../views/NotFound.vue";
 import UserPosts from "../views/posts/UserPosts.vue";
 import EditPost from "../views/posts/EditPost.vue";
 import PostDetails from "../views/posts/PostDetails.vue";
+import MatchingPosts from "../views/posts/MatchingPosts.vue";
 
 import { projectAuth } from "@/firebase/config";
 
@@ -84,6 +85,13 @@ const routes = [
     path: "/post/:id",
     name: "PostDetails",
     component: PostDetails,
+    props: true,
+    beforeEnter: requireAuth,
+  },
+  {
+    path: "/matchingposts/:search",
+    name: "MatchingPosts",
+    component: MatchingPosts,
     props: true,
     beforeEnter: requireAuth,
   },

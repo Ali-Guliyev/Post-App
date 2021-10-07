@@ -1,150 +1,152 @@
 <template>
-  <div class="post" v-if="post && user">
-    <div class="row">
-      <div class="col-1">
-        <router-link :to="{ name: 'UserProfile', params: { id } }">
-          <img
-            v-if="user.photoURL"
-            :src="user.photoURL"
-            alt=""
-            class="userImage"
-          />
-          <img
-            v-else
-            src="@/assets/images/defaultUserImage.png"
-            alt=""
-            class="userImage"
-          />
-        </router-link>
-      </div>
-      <div class="col-2">
-        <router-link :to="{ name: 'UserProfile', params: { id } }">
-          <p class="userName" v-if="ownership(post.userId)">You</p>
-          <p class="userName" v-else>
-            {{ user.displayName }}
-          </p>
-        </router-link>
-        <p class="postDate">{{ post.createdAt }} ago</p>
-      </div>
-      <div class="col-3">
-        <div v-if="ownership(post.userId)">
-          <Dropdown :id="id" @handleDelete="handleDelete()" />
-        </div>
-      </div>
-    </div>
-    <div class="content">
-      <p class="message">{{ post.message }}</p>
-      <img v-if="post.photoURL" class="postImage" :src="post.photoURL" />
-    </div>
-    <div class="action">
-      <div class="like" @click="handleLike">
-        <img
-          v-if="post.isLiked"
-          class="static"
-          src="@/assets/images/liked.svg"
-        />
-        <img v-else class="static" src="@/assets/images/like.svg" />
-        <img class="hover" src="@/assets/images/likeHover.svg" />
-        <span :style="{ color: post.isLiked ? '#0DE6CB' : '#515151' }">{{
-          post.likes.length
-        }}</span>
-      </div>
-      <a href="#">
-        <div class="comment">
-          <img class="static" src="@/assets/images/comment.svg" />
-          <img class="hover" src="@/assets/images/commentHover.svg" />
-          <span>{{ post.comments.length }}</span>
-        </div>
-      </a>
-    </div>
-    <!-- Add Comment -->
-    <p class="commentsLength" v-if="post.comments.length > 0">
-      {{ post.comments.length }} Comments
-    </p>
-    <p class="commentsLength" v-else>No Comments</p>
-    <form class="addComment" @submit.prevent="handleComment">
-      <div class="inputContainer">
-        <textarea
-          ref="commentInp"
-          v-model="commentMessage"
-          placeholder="Add a comment"
-          required
-        ></textarea>
-      </div>
-      <button class="btn">Comment</button>
-    </form>
-    <p class="error" v-if="error">{{ error }}</p>
-
-    <!-- Comment List -->
-    <div class="comments">
-      <div class="comment" v-for="comment in post.comments" :key="comment">
+  <div class="posts" v-if="post && user">
+    <div class="post">
+      <div class="row">
         <div class="col-1">
-          <router-link
-            :to="{ name: 'UserProfile', params: { id: comment.userId } }"
-          >
+          <router-link :to="{ name: 'UserProfile', params: { id } }">
             <img
-              v-if="getUserById(comment.userId).photoURL"
-              :src="getUserById(comment.userId).photoURL"
+              v-if="user.photoURL"
+              :src="user.photoURL"
               alt=""
-              class="commentUserImage"
+              class="userImage"
             />
             <img
               v-else
               src="@/assets/images/defaultUserImage.png"
               alt=""
-              class="commentUserImage"
+              class="userImage"
             />
           </router-link>
         </div>
         <div class="col-2">
-          <div class="row-1">
-            <router-link
-              :to="{ name: 'UserProfile', params: { id: comment.userId } }"
-              class="commentUserName"
-              v-if="ownership(comment.userId)"
-              >You</router-link
-            >
-            <router-link
-              :to="{ name: 'UserProfile', params: { id: comment.userId } }"
-              class="commentUserName"
-              v-else
-            >
-              {{ getUserById(comment.userId).displayName }}
-            </router-link>
-
-            <p class="postDate commentPostDate">
-              {{ formatDistanceToNow(comment.createdAt.toDate()) }} ago
+          <router-link :to="{ name: 'UserProfile', params: { id } }">
+            <p class="userName" v-if="ownership(post.userId)">You</p>
+            <p class="userName" v-else>
+              {{ user.displayName }}
             </p>
-            <svg
-              v-if="ownership(comment.userId)"
-              @click="handleDeleteComment(comment.id)"
-              class="deleteComment"
-              id="Layer_1"
-              enable-background="new 0 0 512 512"
-              viewBox="0 0 512 512"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="#515151"
-            >
-              <g>
-                <path
-                  d="m424 64h-88v-16c0-26.467-21.533-48-48-48h-64c-26.467 0-48 21.533-48 48v16h-88c-22.056 0-40 17.944-40 40v56c0 8.836 7.164 16 16 16h8.744l13.823 290.283c1.221 25.636 22.281 45.717 47.945 45.717h242.976c25.665 0 46.725-20.081 47.945-45.717l13.823-290.283h8.744c8.836 0 16-7.164 16-16v-56c0-22.056-17.944-40-40-40zm-216-16c0-8.822 7.178-16 16-16h64c8.822 0 16 7.178 16 16v16h-96zm-128 56c0-4.411 3.589-8 8-8h336c4.411 0 8 3.589 8 8v40c-4.931 0-331.567 0-352 0zm313.469 360.761c-.407 8.545-7.427 15.239-15.981 15.239h-242.976c-8.555 0-15.575-6.694-15.981-15.239l-13.751-288.761h302.44z"
-                />
-                <path
-                  d="m256 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"
-                />
-                <path
-                  d="m336 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"
-                />
-                <path
-                  d="m176 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"
-                />
-              </g>
-            </svg>
+          </router-link>
+          <p class="postDate">{{ post.createdAt }} ago</p>
+        </div>
+        <div class="col-3">
+          <div v-if="ownership(post.userId)">
+            <Dropdown :id="id" @handleDelete="handleDelete()" />
           </div>
-          <div class="row-2">
-            <p class="commentMessage">
-              {{ comment.commentMessage }}
-            </p>
+        </div>
+      </div>
+      <div class="content">
+        <p class="message">{{ post.message }}</p>
+        <img v-if="post.photoURL" class="postImage" :src="post.photoURL" />
+      </div>
+      <div class="action">
+        <div class="like" @click="handleLike">
+          <img
+            v-if="post.isLiked"
+            class="static"
+            src="@/assets/images/liked.svg"
+          />
+          <img v-else class="static" src="@/assets/images/like.svg" />
+          <img class="hover" src="@/assets/images/likeHover.svg" />
+          <span :style="{ color: post.isLiked ? '#0DE6CB' : '#515151' }">{{
+            post.likes.length
+          }}</span>
+        </div>
+        <a href="#">
+          <div class="comment">
+            <img class="static" src="@/assets/images/comment.svg" />
+            <img class="hover" src="@/assets/images/commentHover.svg" />
+            <span>{{ post.comments.length }}</span>
+          </div>
+        </a>
+      </div>
+      <!-- Add Comment -->
+      <p class="commentsLength" v-if="post.comments.length > 0">
+        {{ post.comments.length }} Comments
+      </p>
+      <p class="commentsLength" v-else>No Comments</p>
+      <form class="addComment" @submit.prevent="handleComment">
+        <div class="inputContainer">
+          <textarea
+            ref="commentInp"
+            v-model="commentMessage"
+            placeholder="Add a comment"
+            required
+          ></textarea>
+        </div>
+        <button class="btn">Comment</button>
+      </form>
+      <p class="error" v-if="error">{{ error }}</p>
+
+      <!-- Comment List -->
+      <div class="comments">
+        <div class="comment" v-for="comment in post.comments" :key="comment">
+          <div class="col-1">
+            <router-link
+              :to="{ name: 'UserProfile', params: { id: comment.userId } }"
+            >
+              <img
+                v-if="getUserById(comment.userId).photoURL"
+                :src="getUserById(comment.userId).photoURL"
+                alt=""
+                class="commentUserImage"
+              />
+              <img
+                v-else
+                src="@/assets/images/defaultUserImage.png"
+                alt=""
+                class="commentUserImage"
+              />
+            </router-link>
+          </div>
+          <div class="col-2">
+            <div class="row-1">
+              <router-link
+                :to="{ name: 'UserProfile', params: { id: comment.userId } }"
+                class="commentUserName"
+                v-if="ownership(comment.userId)"
+                >You</router-link
+              >
+              <router-link
+                :to="{ name: 'UserProfile', params: { id: comment.userId } }"
+                class="commentUserName"
+                v-else
+              >
+                {{ getUserById(comment.userId).displayName }}
+              </router-link>
+
+              <p class="postDate commentPostDate">
+                {{ formatDistanceToNow(comment.createdAt.toDate()) }} ago
+              </p>
+              <svg
+                v-if="ownership(comment.userId)"
+                @click="handleDeleteComment(comment.id)"
+                class="deleteComment"
+                id="Layer_1"
+                enable-background="new 0 0 512 512"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#515151"
+              >
+                <g>
+                  <path
+                    d="m424 64h-88v-16c0-26.467-21.533-48-48-48h-64c-26.467 0-48 21.533-48 48v16h-88c-22.056 0-40 17.944-40 40v56c0 8.836 7.164 16 16 16h8.744l13.823 290.283c1.221 25.636 22.281 45.717 47.945 45.717h242.976c25.665 0 46.725-20.081 47.945-45.717l13.823-290.283h8.744c8.836 0 16-7.164 16-16v-56c0-22.056-17.944-40-40-40zm-216-16c0-8.822 7.178-16 16-16h64c8.822 0 16 7.178 16 16v16h-96zm-128 56c0-4.411 3.589-8 8-8h336c4.411 0 8 3.589 8 8v40c-4.931 0-331.567 0-352 0zm313.469 360.761c-.407 8.545-7.427 15.239-15.981 15.239h-242.976c-8.555 0-15.575-6.694-15.981-15.239l-13.751-288.761h302.44z"
+                  />
+                  <path
+                    d="m256 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"
+                  />
+                  <path
+                    d="m336 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"
+                  />
+                  <path
+                    d="m176 448c8.836 0 16-7.164 16-16v-208c0-8.836-7.164-16-16-16s-16 7.164-16 16v208c0 8.836 7.163 16 16 16z"
+                  />
+                </g>
+              </svg>
+            </div>
+            <div class="row-2">
+              <p class="commentMessage">
+                {{ comment.commentMessage }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -345,20 +347,20 @@ export default {
   margin-bottom: 14px;
 }
 
-.row-1 {
+.comments .row-1 {
   display: flex;
   align-items: center;
   position: relative;
   padding: 4px 0;
 }
 
-.comment .col-1 {
-  margin-right: 14px;
+.comments .col-2 {
+  flex: 1;
+  width: 100%;
 }
 
-.col-2 {
-  width: 100%;
-  flex: 1;
+.comment .col-1 {
+  margin-right: 14px;
 }
 
 .commentUserImage {
@@ -395,6 +397,15 @@ export default {
 }
 
 @media screen and (max-width: 1000px) {
+  .posts {
+    padding: 10px;
+  }
+
+  .post {
+    padding: 16px;
+    margin-top: 10px;
+  }
+
   .commentsLength {
     font-size: 15px;
     margin-top: 5px;

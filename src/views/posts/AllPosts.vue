@@ -1,15 +1,14 @@
 <template>
-  <ListView v-if="docs" :posts="docs" />
+  <ListView :posts="docs" />
 </template>
 
 <script>
 import getCollection from "@/composables/getCollection";
 import ListView from "@/components/ListView.vue";
-import { onMounted } from "@vue/runtime-core";
 export default {
   components: { ListView },
   setup() {
-    const { documents: docs, error } = getCollection("posts", "createdAt");
+    const { documents: docs } = getCollection("posts", "createdAt");
 
     return { docs };
   },

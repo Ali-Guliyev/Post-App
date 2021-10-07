@@ -11,7 +11,11 @@
         >Edit</router-link
       >
       <router-link
-        v-if="$route.name == 'AllPosts' || $route.name == 'UserPosts'"
+        v-if="
+          $route.name == 'AllPosts' ||
+            $route.name == 'UserPosts' ||
+            $route.name == 'MatchingPosts'
+        "
         class="dropdownEl"
         :to="{ name: 'PostDetails', params: { id } }"
         >More</router-link
