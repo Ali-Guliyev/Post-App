@@ -47,7 +47,7 @@
           </div>
         </div>
         <div class="content">
-          <p class="message">{{ post.message }}</p>
+          <textarea class="message" readonly :value="post.message"></textarea>
           <img v-if="post.photoURL" class="postImage" :src="post.photoURL" />
         </div>
 
@@ -91,6 +91,7 @@ import Spinner from "@/components/Spinner.vue";
 import Dropdown from "@/components/Dropdown.vue";
 import SearchInput from "@/components/SearchInput.vue";
 import { formatDistanceToNow } from "date-fns";
+import { onMounted, onUpdated } from "@vue/runtime-core";
 export default {
   props: ["posts"],
   components: { Spinner, Dropdown, SearchInput },
@@ -98,6 +99,13 @@ export default {
     const { user: currentUser } = getUser();
     const { documents: users } = getCollection("users");
     const ownership = (id) => currentUser.value && currentUser.value.uid == id;
+
+    onUpdated(() => {
+      const messageInputs = document.querySelectorAll(".message");
+      messageInputs.forEach((messageInput) => {
+        messageInput.style.height = messageInput.scrollHeight + "px";
+      });
+    });
 
     const getUserById = (id) => {
       let res;
@@ -171,6 +179,18 @@ export default {
 </script>
 
 <style>
+textarea.message,
+textarea.commentMessage {
+  resize: none;
+  border: none;
+  margin-bottom: -10px;
+}
+
+textarea.message:focus,
+textarea.commentMessage:focus {
+  outline: none;
+}
+
 .posts {
   max-width: 580px;
   margin: 0 auto;
@@ -219,7 +239,7 @@ export default {
 .action {
   display: flex;
   justify-content: space-between;
-  padding: 10px 100px;
+  padding: 10px 50px;
 }
 
 .action img.hover {
@@ -298,7 +318,6 @@ export default {
 }
 
 .searchInput:focus {
-  border: 0;
   outline: 0;
 }
 
@@ -383,6 +402,7 @@ export default {
 
   .searchInput {
     font-size: 15px;
+    border: 1px solid #61c8bb;
   }
 }
 </style>

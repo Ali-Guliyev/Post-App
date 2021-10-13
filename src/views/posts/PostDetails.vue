@@ -34,7 +34,12 @@
         </div>
       </div>
       <div class="content">
-        <p class="message">{{ post.message }}</p>
+        <textarea
+          ref="postMessage"
+          readonly
+          class="message"
+          :value="post.message"
+        ></textarea>
         <img v-if="post.photoURL" class="postImage" :src="post.photoURL" />
       </div>
       <div class="action">
@@ -143,9 +148,12 @@
               </svg>
             </div>
             <div class="row-2">
-              <p class="commentMessage">
-                {{ comment.commentMessage }}
-              </p>
+              <textarea
+                readonly
+                class="commentMessage"
+                :value="comment.commentMessage"
+              >
+              </textarea>
             </div>
           </div>
         </div>
@@ -165,7 +173,7 @@ import getCollection from "@/composables/getCollection";
 import getUser from "@/composables/getUser";
 import Dropdown from "@/components/Dropdown";
 import Spinner from "@/components/Spinner.vue";
-import { onMounted, ref, watch } from "@vue/runtime-core";
+import { onMounted, onUpdated, ref, watch } from "@vue/runtime-core";
 import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "vue-router";
 import uniqid from "uniqid";
@@ -181,10 +189,22 @@ export default {
     const commentMessage = ref(null);
     const user = ref(null);
     const router = useRouter();
+    const postMessage = ref(null);
 
     const ownership = (userId) => {
       return currentUser.value && userId == currentUser.value.uid;
     };
+
+    onUpdated(() => {
+      if (postMessage.value) {
+        postMessage.value.style.height = postMessage.value.scrollHeight + "px";
+      }
+
+      const commentMessages = document.querySelectorAll(".commentMessage");
+      commentMessages.forEach((commentMessage) => {
+        commentMessage.style.height = commentMessage.scrollHeight + "px";
+      });
+    });
 
     // Formatting Posts
     watch(post, () => {
@@ -302,6 +322,7 @@ export default {
       error,
       getUserById,
       formatDistanceToNow,
+      postMessage,
     };
   },
 };
@@ -311,6 +332,10 @@ export default {
 .commentsLength {
   font-size: 17px;
   margin-top: 17px;
+}
+
+.commentMessage {
+  width: 100%;
 }
 
 .addComment {
