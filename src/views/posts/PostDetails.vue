@@ -3,7 +3,9 @@
     <div class="post">
       <div class="row">
         <div class="col-1">
-          <router-link :to="{ name: 'UserProfile', params: { id } }">
+          <router-link
+            :to="{ name: 'UserProfile', params: { id: post.userId } }"
+          >
             <img
               v-if="user.photoURL"
               :src="user.photoURL"
@@ -19,7 +21,9 @@
           </router-link>
         </div>
         <div class="col-2">
-          <router-link :to="{ name: 'UserProfile', params: { id } }">
+          <router-link
+            :to="{ name: 'UserProfile', params: { id: post.userId } }"
+          >
             <p class="userName" v-if="ownership(post.userId)">You</p>
             <p class="userName" v-else>
               {{ user.displayName }}

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
+import Welcome from "../views/Welcome.vue";
 import Auth from "../views/Auth.vue";
 import AllPosts from "../views/posts/AllPosts.vue";
 import UserProfile from "../views/users/UserProfile.vue";
@@ -18,14 +18,14 @@ const requireAuth = (from, to, next) => {
   if (user) {
     next();
   } else {
-    next({ name: "Home" });
+    next({ name: "Welcome" });
   }
 };
 
 const noRequireAuth = (from, to, next) => {
   let user = projectAuth.currentUser;
   if (user) {
-    next({ name: "Home" });
+    next({ name: "Welcome" });
   } else {
     next();
   }
@@ -34,20 +34,20 @@ const noRequireAuth = (from, to, next) => {
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "AllPosts",
+    component: AllPosts,
+    beforeEnter: requireAuth,
+  },
+  {
+    path: "/welcome",
+    name: "Welcome",
+    component: Welcome,
   },
   {
     path: "/auth",
     name: "Auth",
     component: Auth,
     beforeEnter: noRequireAuth,
-  },
-  {
-    path: "/allposts",
-    name: "AllPosts",
-    component: AllPosts,
-    beforeEnter: requireAuth,
   },
   {
     path: "/profile/:id",

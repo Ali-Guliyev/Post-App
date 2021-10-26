@@ -6,6 +6,7 @@
 
 <script>
 import { onMounted, ref } from "vue";
+import { randomNum, randomArrItem } from "@/composables/utilityFunctions";
 export default {
   props: ["amount", "bgColor"],
   setup(props) {
@@ -20,14 +21,6 @@ export default {
       "51EFDB",
       "5EFFEB",
     ];
-
-    const randomNum = (min, max) => {
-      return Math.random() * (max - min) + min;
-    };
-
-    const randomArrItem = (arr) => {
-      return arr[Math.floor(Math.random() * arr.length)];
-    };
 
     onMounted(() => {
       // Change this components parents style to position = relative

@@ -11,14 +11,11 @@
 
 <script>
 import { onMounted, ref } from "@vue/runtime-core";
+import { randomNum } from "@/composables/utilityFunctions";
 export default {
   setup() {
     const questionMarks = 20;
     const questionMarksRef = ref(null);
-
-    const randomNum = (min, max) => {
-      return Math.random() * (max - min) + min;
-    };
 
     onMounted(() => {
       for (let i = 0; i < questionMarks; i++) {

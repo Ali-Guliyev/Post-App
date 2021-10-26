@@ -1,7 +1,7 @@
 <template>
   <div class="nav-container">
     <nav>
-      <router-link :to="{ name: 'Home' }" class="logo">
+      <router-link :to="{ name: 'Welcome' }" class="logo">
         <img src="@/assets/images/logo.svg" alt="" />
         <p>Post App</p>
       </router-link>
@@ -60,9 +60,8 @@
 <script>
 import getUser from "@/composables/getUser";
 import useLogout from "@/composables/useLogout";
-import getDocument from "@/composables/getDocument";
 import { useRouter } from "vue-router";
-import { onMounted, ref, watch } from "@vue/runtime-core";
+import { ref } from "@vue/runtime-core";
 export default {
   setup() {
     const { user } = getUser();
@@ -73,7 +72,7 @@ export default {
     const handleClick = async () => {
       await logout();
       if (!error.value) {
-        router.push({ name: "Home" });
+        router.push({ name: "Welcome" });
       }
     };
 

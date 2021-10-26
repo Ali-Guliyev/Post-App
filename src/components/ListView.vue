@@ -1,6 +1,10 @@
 <template>
   <div class="posts">
-    <SearchInput v-if="$route.name != 'UserPosts'" />
+    <ScrollToTopButton />
+    <div class="searchWrapper">
+      <BackButton v-if="$route.name == 'MatchingPosts'" />
+      <SearchInput v-if="$route.name != 'UserPosts'" />
+    </div>
     <div class="postsWrapper" v-if="formattedPosts != null">
       <div class="post" v-for="(post, index) in formattedPosts" :key="post.id">
         <div class="row">
@@ -85,16 +89,17 @@ import { computed, ref } from "@vue/reactivity";
 import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import useStorage from "@/composables/useStorage";
-import { months } from "@/composables/getDate";
 import getCollection from "@/composables/getCollection";
 import Spinner from "@/components/Spinner.vue";
 import Dropdown from "@/components/Dropdown.vue";
 import SearchInput from "@/components/SearchInput.vue";
 import { formatDistanceToNow } from "date-fns";
-import { onMounted, onUpdated } from "@vue/runtime-core";
+import { onUpdated } from "@vue/runtime-core";
+import BackButton from "@/components/BackButton.vue";
+import ScrollToTopButton from "@/components/ScrollToTopButton.vue";
 export default {
   props: ["posts"],
-  components: { Spinner, Dropdown, SearchInput },
+  components: { Spinner, Dropdown, SearchInput, BackButton, ScrollToTopButton },
   setup(props) {
     const { user: currentUser } = getUser();
     const { documents: users } = getCollection("users");
@@ -145,7 +150,7 @@ export default {
 
     const formattedPosts = computed(() => {
       if (props.posts && users.value) {
-        return props.posts.map((post, index) => {
+        let newPosts = props.posts.map((post, index) => {
           const date = post.createdAt.toDate();
           let time = formatDistanceToNow(date);
 
@@ -164,6 +169,9 @@ export default {
             isLiked,
           };
         });
+
+        // If posts have some value load that, else keep making spinner animation
+        return newPosts.length == 0 ? null : newPosts;
       }
     });
 
@@ -179,6 +187,11 @@ export default {
 </script>
 
 <style>
+.searchWrapper {
+  display: flex;
+  margin-top: 20px;
+}
+
 textarea.message,
 textarea.commentMessage {
   resize: none;
@@ -304,8 +317,8 @@ textarea.commentMessage:focus {
   border-radius: 12px;
   font-size: 18px;
   padding: 10px 15px;
-  margin-top: 20px;
   margin-bottom: -5px;
+  margin-left: 10px;
   border: 0;
   box-shadow: 0 2px 5px #61c8bb;
   color: gray;
